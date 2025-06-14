@@ -12,6 +12,11 @@ export function setUser() {
 }
 
 export function readConfig(configPath: string): Config {
+  let configpath = os.homedir() + "/.gatorconfig.json"
+  if (configPath !== "" | undefined) {
+    configpath = configPath;
+  }
+
 
 
 }
