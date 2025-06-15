@@ -1,16 +1,38 @@
 import { Config, setUser, readConfig } from "./config.js";
+import {
+  CommandRegistry,
+  CommandHandler,
+  registerCommand,
+  runCommand,
+  handlerLogin,
+} from "./command_handler.js";
+
+import argv from "process";
+import process from "process";
 
 function main() {
-  let config = {} as Config;
-  config.current_user_name = "currentUserName";
-  config.dbUrl = "postgres://example";
+  let cmndRegis: CommandRegistry = {
+    login: {} as CommandHandler,
+  };
 
-  setUser(config);
-  let readconfig = readConfig();
+  registerCommand(cmndRegis, "login", handlerLogin);
 
-  console.log(`${readconfig.current_user_name}`);
-  console.log(`dbUrl `);
-  console.log(`${readconfig.dbUrl}`);
+  let commands = argv["argv"].slice(2);
+
+  if (commands.length <= 0) {
+    console.log("Must enter atleast one command");
+    return process.exit(1);
+  }
+
+  let commandName = commands[0];
+  let args = commands.slice(1);
+
+  try {
+    runCommand(cmndRegis, commandName, ...args);
+  } catch (error: any) {
+    console.log(error.message);
+    return process.exit(1);
+  }
 }
 
 main();
