@@ -4,14 +4,14 @@
   "description": "Blog Aggregator in typescript",
   "main": "index.js",
   "dependencies": {
+    "drizzle-orm": "^0.44.2",
     "esbuild": "^0.25.5",
     "get-tsconfig": "^4.10.1",
+    "postgres": "^3.4.7",
     "resolve-pkg-maps": "^1.0.0",
-    "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "undici-types": "^7.8.0"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "tsx ./src/index.ts"
   },
@@ -25,5 +25,9 @@
   "bugs": {
     "url": "https://github.com/lasantos2/aggregator_typescript/issues"
   },
-  "homepage": "https://github.com/lasantos2/aggregator_typescript#readme"
+  "homepage": "https://github.com/lasantos2/aggregator_typescript#readme",
+  "devDependencies": {
+    "drizzle-kit": "^0.18.1",
+    "tsx": "^4.20.3"
+  }
 }
