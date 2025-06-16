@@ -1,8 +1,11 @@
 import { setUser } from "./config.js";
 
-export type CommandHandler = (cmdName: string, ...args: string[]) => void;
+export type CommandHandler = (
+  cmdName: string,
+  ...args: string[]
+) => Promise<void>;
 
-export function handlerLogin(cmdName: string, ...args: string[]) {
+export async function handlerLogin(cmdName: string, ...args: string[]) {
   if (args.length <= 0 || args.length > 1) {
     throw new Error("Expect a single argument: username");
   }
@@ -14,7 +17,7 @@ export function handlerLogin(cmdName: string, ...args: string[]) {
 
 export type CommandRegistry = Record<string, CommandHandler>;
 
-export function registerCommand(
+export async function registerCommand(
   registry: CommandRegistry,
   cmdName: string,
   handler: CommandHandler,
@@ -22,7 +25,7 @@ export function registerCommand(
   registry[cmdName] = handler;
 }
 
-export function runCommand(
+export async function runCommand(
   registry: CommandRegistry,
   cmdName: string,
   ...args: string[]

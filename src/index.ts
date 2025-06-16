@@ -10,7 +10,7 @@ import {
 import argv from "process";
 import process from "process";
 
-function main() {
+async function main() {
   let cmndRegis: CommandRegistry = {
     login: {} as CommandHandler,
   };
@@ -28,11 +28,13 @@ function main() {
   let args = commands.slice(1);
 
   try {
-    runCommand(cmndRegis, commandName, ...args);
+    await runCommand(cmndRegis, commandName, ...args);
   } catch (error: any) {
     console.log(error.message);
     return process.exit(1);
   }
+
+  process.exit(0);
 }
 
 main();
