@@ -5,6 +5,7 @@ import {
   registerCommand,
   runCommand,
   handlerLogin,
+  handlerRegister,
 } from "./command_handler.js";
 
 import argv from "process";
@@ -13,9 +14,11 @@ import process from "process";
 async function main() {
   let cmndRegis: CommandRegistry = {
     login: {} as CommandHandler,
+    register: {} as CommandHandler,
   };
 
   registerCommand(cmndRegis, "login", handlerLogin);
+  registerCommand(cmndRegis, "register", handlerRegister);
 
   let commands = argv["argv"].slice(2);
 
