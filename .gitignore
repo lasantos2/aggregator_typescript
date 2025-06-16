@@ -135,4 +135,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .vscode
-src/lib/db
+src/lib/db/0000_sleepy_deathbird.sql
+src/lib/db/meta/_journal.json
+src/lib/db/meta/0000_snapshot.json
