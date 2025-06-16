@@ -13,7 +13,9 @@
     "undici-types": "^7.8.0"
   },
   "scripts": {
-    "start": "tsx ./src/index.ts"
+    "start": "tsx ./src/index.ts",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate"
   },
   "repository": {
     "type": "git",
@@ -27,7 +29,7 @@
   },
   "homepage": "https://github.com/lasantos2/aggregator_typescript#readme",
   "devDependencies": {
-    "drizzle-kit": "^0.18.1",
+    "drizzle-kit": "^0.31.1",
     "tsx": "^4.20.3"
   }
 }
