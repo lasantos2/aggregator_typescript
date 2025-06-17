@@ -13,7 +13,7 @@ export async function createUser(name: string) {
   return results;
 }
 
-//export async function getUser(name: string) {
-//  const [results] = await db.select().from(users).where(eq(users.name, name));
-//  return results;
-//}
+export async function getUser(name: string) {
+  const [results] = await db.select().from(users).where(eq(users.name, name));
+  return results;
+}
