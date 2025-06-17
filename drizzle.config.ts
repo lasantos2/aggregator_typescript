@@ -1,10 +1,10 @@
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
-  schema: "src/schema.ts",
-  out: "src/lib/db",
+  schema: "src/lib/db",
+  out: "src/lib/db/generated",
   dialect: "postgresql",
   dbCredentials: {
-    url: "postgres://postgres:postgres@localhost:5432/gator",
+    url: "postgres://postgres:postgres@localhost:5432/gator?sslmode=disable",
   },
 });

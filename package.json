@@ -7,7 +7,7 @@
     "drizzle-orm": "^0.44.2",
     "esbuild": "^0.25.5",
     "get-tsconfig": "^4.10.1",
-    "postgres": "^3.4.7",
+    "pg": "^8.16.0",
     "resolve-pkg-maps": "^1.0.0",
     "typescript": "^5.8.3",
     "undici-types": "^7.8.0"
@@ -30,6 +30,7 @@
   "homepage": "https://github.com/lasantos2/aggregator_typescript#readme",
   "devDependencies": {
     "drizzle-kit": "^0.31.1",
+    "postgres": "^3.4.7",
     "tsx": "^4.20.3"
   }
 }

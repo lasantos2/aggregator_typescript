@@ -1,4 +1,3 @@
-import { Config, setUser, readConfig } from "./config.js";
 import {
   CommandRegistry,
   CommandHandler,
@@ -31,7 +30,7 @@ async function main() {
   let args = commands.slice(1);
 
   try {
-    await runCommand(cmndRegis, commandName, ...args);
+    runCommand(cmndRegis, commandName, ...args);
   } catch (error: any) {
     console.log(error.message);
     return process.exit(1);

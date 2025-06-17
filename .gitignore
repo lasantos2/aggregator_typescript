@@ -138,3 +138,5 @@ dist
 src/lib/db/0000_sleepy_deathbird.sql
 src/lib/db/meta/_journal.json
 src/lib/db/meta/0000_snapshot.json
+src/lib/db/generated/meta
+src/lib/db/generated
