@@ -27,7 +27,6 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
   status = await createUser(name);
   console.log(status);
 
-  setUser(status.name);
   console.log("created User");
 }
 
