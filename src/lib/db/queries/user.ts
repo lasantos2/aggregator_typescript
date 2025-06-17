@@ -3,14 +3,13 @@ import { db } from "..";
 import { users } from "../schema";
 
 export async function createUser(name: string) {
-  console.log("Fuck");
-  const [results] = await db.insert(users).values({ name: name }).returning();
-  if (results === undefined) {
-    throw new Error("Someshit happened");
+  try {
+    const [results] = await db.insert(users).values({ name: name }).returning();
+    return results;
+  } catch (error) {
+    console.error("Error fetching data:", error);
   }
   console.log("Finished probably");
-  console.log(results.name);
-  return results;
 }
 
 export async function getUser(name: string) {

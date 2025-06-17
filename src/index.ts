@@ -16,8 +16,8 @@ async function main() {
     register: {} as CommandHandler,
   };
 
-  registerCommand(cmndRegis, "login", handlerLogin);
-  registerCommand(cmndRegis, "register", handlerRegister);
+  let regi = await registerCommand(cmndRegis, "login", handlerLogin);
+  regi = await registerCommand(cmndRegis, "register", handlerRegister);
 
   let commands = argv["argv"].slice(2);
 
@@ -30,9 +30,9 @@ async function main() {
   let args = commands.slice(1);
 
   try {
-    runCommand(cmndRegis, commandName, ...args);
+    await runCommand(cmndRegis, commandName, ...args);
   } catch (error: any) {
-    console.log(error.message);
+    console.log("Something happened");
     return process.exit(1);
   }
 

@@ -9,7 +9,8 @@ export type Config = {
 
 export function setUser(username: string) {
   // writes config object to json file after stting current user name field
-  let config: Config = { current_user_name: username, dbUrl: "" };
+  let oldconfig = readConfig();
+  let config: Config = { current_user_name: username, dbUrl: oldconfig.dbUrl };
 
   writeConfig(config);
 }

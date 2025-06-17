@@ -5,6 +5,6 @@ export default defineConfig({
   out: "src/lib/db/generated",
   dialect: "postgresql",
   dbCredentials: {
-    url: "postgres://postgres:postgres@localhost:5432/gator?sslmode=disable",
+    url: "postgres://postgres:postgres@localhost:5432/gator",
   },
 });

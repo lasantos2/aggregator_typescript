@@ -1,5 +1,5 @@
 import { setUser } from "./config.js";
-import { createUser } from "./lib/db/queries/user.js";
+import { createUser, getUser } from "./lib/db/queries/user.js";
 
 export type CommandHandler = (
   cmdName: string,
@@ -10,8 +10,17 @@ export async function handlerLogin(cmdName: string, ...args: string[]) {
   if (args.length <= 0 || args.length > 1) {
     throw new Error("Expect a single argument: username");
   }
+  const name = args[0];
 
-  setUser(args[0]);
+  let userExist = await getUser(name);
+
+  if (userExist.name !== name) {
+    console.log(
+      `User: ${name} does not exist in database, register user first`,
+    );
+    return new Error("User does not exist");
+  }
+  setUser(userExist.name);
 
   console.log("User has been set");
 }
@@ -25,8 +34,8 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
   let status: any;
   console.log(`trying to register ${name}`);
   status = await createUser(name);
-  console.log(status);
 
+  setUser(status.name);
   console.log("created User");
 }
 
@@ -45,5 +54,5 @@ export async function runCommand(
   cmdName: string,
   ...args: string[]
 ) {
-  registry[cmdName](cmdName, ...args);
+  await registry[cmdName](cmdName, ...args);
 }
