@@ -5,6 +5,8 @@ import {
   runCommand,
   handlerLogin,
   handlerRegister,
+  handlerReset,
+  handlerUsers,
 } from "./command_handler.js";
 
 import argv from "process";
@@ -14,10 +16,13 @@ async function main() {
   let cmndRegis: CommandRegistry = {
     login: {} as CommandHandler,
     register: {} as CommandHandler,
+    reset: {} as CommandHandler,
   };
 
   let regi = await registerCommand(cmndRegis, "login", handlerLogin);
   regi = await registerCommand(cmndRegis, "register", handlerRegister);
+  regi = await registerCommand(cmndRegis, "reset", handlerReset);
+  regi = await registerCommand(cmndRegis, "users", handlerUsers);
 
   let commands = argv["argv"].slice(2);
 
@@ -32,7 +37,6 @@ async function main() {
   try {
     await runCommand(cmndRegis, commandName, ...args);
   } catch (error: any) {
-    console.log("Something happened");
     return process.exit(1);
   }
 
