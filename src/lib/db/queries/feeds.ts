@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
-import { feeds } from "../schema";
+import { feed_follows, feeds } from "../schema";
 
 export async function create_feed(
   feedname: string,
@@ -45,4 +45,13 @@ export async function createFeeedFollow() {
   console.log("TODO: Not implemented");
 
   return;
+}
+
+export async function getFeedFollowsForUser(userid: any) {
+  let feeds = await db
+    .select()
+    .from(feed_follows)
+    .where(eq(feed_follows.user_id, userid));
+
+  return feeds;
 }
