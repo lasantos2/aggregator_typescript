@@ -7,6 +7,7 @@ import {
   handlerRegister,
   handlerReset,
   handlerUsers,
+  handlerAgg,
 } from "./command_handler.js";
 
 import argv from "process";
@@ -17,12 +18,14 @@ async function main() {
     login: {} as CommandHandler,
     register: {} as CommandHandler,
     reset: {} as CommandHandler,
+    agg: {} as CommandHandler,
   };
 
   let regi = await registerCommand(cmndRegis, "login", handlerLogin);
   regi = await registerCommand(cmndRegis, "register", handlerRegister);
   regi = await registerCommand(cmndRegis, "reset", handlerReset);
   regi = await registerCommand(cmndRegis, "users", handlerUsers);
+  regi = await registerCommand(cmndRegis, "agg", handlerAgg);
 
   let commands = argv["argv"].slice(2);
 

@@ -7,6 +7,8 @@ import {
   showUsers,
 } from "./lib/db/queries/user.js";
 
+import { fetchFeed } from "./rssfetch.js";
+
 export type CommandHandler = (
   cmdName: string,
   ...args: string[]
@@ -67,6 +69,11 @@ export async function handlerUsers(cmdName: string, ...args: string[]) {
   } catch (error: any) {
     throw new Error("No users");
   }
+}
+
+export async function handlerAgg() {
+  let result = await fetchFeed("https://www.wagslane.dev/index.xml");
+  console.log(result);
 }
 
 export type CommandRegistry = Record<string, CommandHandler>;
