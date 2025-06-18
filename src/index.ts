@@ -10,6 +10,7 @@ import {
   handlerAgg,
   addFeed,
   handlerFeeds,
+  handlerFollow,
 } from "./command_handler.js";
 
 import argv from "process";
@@ -30,6 +31,7 @@ async function main() {
   regi = await registerCommand(cmndRegis, "agg", handlerAgg);
   regi = await registerCommand(cmndRegis, "addfeed", addFeed);
   regi = await registerCommand(cmndRegis, "feeds", handlerFeeds);
+  regi = await registerCommand(cmndRegis, "follow", handlerFollow);
 
   let commands = argv["argv"].slice(2);
 
