@@ -11,9 +11,14 @@ export async function createUser(name: string) {
   }
 }
 
-export async function getUser(name: string) {
+export async function getUserByName(name: any) {
   const [results] = await db.select().from(users).where(eq(users.name, name));
   return results;
+}
+
+export async function getUserById(userId: any) {
+  const [result] = await db.select().from(users).where(eq(users.id, userId));
+  return result;
 }
 
 export async function deleteUsers() {
