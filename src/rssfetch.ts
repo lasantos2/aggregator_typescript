@@ -2,7 +2,7 @@ import type { RSSFeed, RSSItem } from "rss.js";
 import { XMLParser } from "fast-xml-parser";
 
 export async function fetchFeed(feedUrl: string) {
-  console.log(feedUrl);
+  //console.log(feedUrl);
   const header = new Headers();
 
   header.append("User-Agent", "gator");

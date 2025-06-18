@@ -1,5 +1,6 @@
 import { setUser } from "./config.js";
 import { readConfig } from "./config.js";
+import { create_feed } from "./lib/db/queries/feeds.js";
 import {
   createUser,
   getUser,
@@ -92,4 +93,27 @@ export async function runCommand(
   ...args: string[]
 ) {
   await registry[cmdName](cmdName, ...args);
+}
+
+export async function addFeed(commandName: string, ...args: string[]) {
+  //cmdName: string, ...args: string[]
+  if (args.length <= 0) {
+    console.log("Need two parameters");
+  }
+
+  let namefeed = args[0];
+  let urlfeed = args[1];
+
+  //console.log(namefeed);
+  //console.log(urlfeed);
+
+  let currentConfig = readConfig();
+
+  let current_user = currentConfig.current_user_name;
+
+  let currentUserId = (await getUser(current_user)).id;
+
+  let feedInfo = await fetchFeed(urlfeed);
+
+  let result = await create_feed(feedInfo.title, urlfeed, currentUserId);
 }
