@@ -146,7 +146,6 @@ export async function handlerFeeds() {
 
 export async function handlerFollow(commandName: string, ...args: string[]) {
   console.log("following feed");
-  console.log("TODO: NOT IMPLEMENTED");
 
   let followfeedUrl = args[0];
   // check if feed exists in database
@@ -157,6 +156,7 @@ export async function handlerFollow(commandName: string, ...args: string[]) {
     console.log("Feed does not exist in db");
     return;
   }
+  console.log("TODO: NOT IMPLEMENTED");
   // create new feed follow record
   let result = createFeeedFollow();
   // look up feeds by url

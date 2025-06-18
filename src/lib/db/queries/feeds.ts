@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
 import { feed_follows, feeds } from "../schema";
+import { users } from "../schema";
 
 export async function create_feed(
   feedname: string,
@@ -42,9 +43,32 @@ export async function getFeedByUrl(url: string) {
 
 export async function createFeeedFollow() {
   console.log("Creating feed follow record");
-  console.log("TODO: Not implemented");
+  let newFeedFollow = await db.insert(feed_follows);
 
-  return;
+  let feedfollowmeta = await db
+    .select({
+      id: feed_follows.id,
+      createdAt: feed_follows.createdAt,
+      updatedAt: feed_follows.updatedAt,
+    })
+    .from(feed_follows);
+
+  let feedsmeta = await db
+    .select({ id: feeds.id, name: feeds.name })
+    .from(feeds);
+
+  let usersmeta = await db
+    .select({ id: users.id, name: users.name })
+    .from(users);
+
+  //const result = await db.select().from(users).innerJoin(pets, eq(users.id, pets.ownerId))
+  let Owo = db
+    .select()
+    .from(feed_follows)
+    .innerJoin(feeds, eq(feeds.id, feed_follows.feed_id))
+    .innerJoin(users, eq(users.id, feed_follows.user_id));
+
+  return Owo;
 }
 
 export async function getFeedFollowsForUser(userid: any) {
