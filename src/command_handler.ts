@@ -5,6 +5,7 @@ import {
   createFeeedFollow,
   get_feeds,
   getFeedByUrl,
+  getFeedFollowsForUser,
 } from "./lib/db/queries/feeds.js";
 import {
   createUser,
@@ -166,4 +167,18 @@ export async function handlerFollow(commandName: string, ...args: string[]) {
   console.log(config.current_user_name);
 
   return;
+}
+
+export async function handlerFollowing(commandName: string, ...args: string[]) {
+  let config = readConfig();
+
+  let user = await getUserByName(config.current_user_name);
+  // get feeds the current user is following
+  let feeds = await getFeedFollowsForUser(user.id);
+
+  console.log("TODO: NOT FINISHED IMPLEMENTING");
+  if (feeds.length <= 0) {
+    console.log("No feeds received");
+    return;
+  }
 }

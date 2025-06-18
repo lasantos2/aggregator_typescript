@@ -11,6 +11,7 @@ import {
   addFeed,
   handlerFeeds,
   handlerFollow,
+  handlerFollowing,
 } from "./command_handler.js";
 
 import argv from "process";
@@ -22,6 +23,10 @@ async function main() {
     register: {} as CommandHandler,
     reset: {} as CommandHandler,
     agg: {} as CommandHandler,
+    addFeed: {} as CommandHandler,
+    feeds: {} as CommandHandler,
+    follow: {} as CommandHandler,
+    following: {} as CommandHandler,
   };
 
   let regi = await registerCommand(cmndRegis, "login", handlerLogin);
@@ -32,6 +37,7 @@ async function main() {
   regi = await registerCommand(cmndRegis, "addfeed", addFeed);
   regi = await registerCommand(cmndRegis, "feeds", handlerFeeds);
   regi = await registerCommand(cmndRegis, "follow", handlerFollow);
+  regi = await registerCommand(cmndRegis, "following", handlerFollowing);
 
   let commands = argv["argv"].slice(2);
 
