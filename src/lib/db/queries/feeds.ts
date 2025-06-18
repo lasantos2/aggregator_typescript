@@ -21,3 +21,12 @@ export async function create_feed(
     throw new Error("Lol");
   }
 }
+
+export async function get_feeds() {
+  try {
+    const results = await db.select().from(feeds);
+    return results;
+  } catch (error: any) {
+    throw new Error("Unable to fetch feeds: ", error);
+  }
+}
