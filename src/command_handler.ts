@@ -1,6 +1,11 @@
 import { setUser } from "./config.js";
 import { readConfig } from "./config.js";
-import { create_feed, get_feeds } from "./lib/db/queries/feeds.js";
+import {
+  create_feed,
+  createFeeedFollow,
+  get_feeds,
+  getFeedByUrl,
+} from "./lib/db/queries/feeds.js";
 import {
   createUser,
   deleteUsers,
@@ -134,6 +139,31 @@ export async function handlerFeeds() {
     console.log(feed.name);
     console.log(user.name);
   }
+
+  return;
+}
+
+export async function handlerFollow(commandName: string, ...args: string[]) {
+  console.log("following feed");
+  console.log("TODO: NOT IMPLEMENTED");
+
+  let followfeedUrl = args[0];
+  // check if feed exists in database
+  let feedExist =
+    (await getFeedByUrl(followfeedUrl)) !== undefined ? true : false;
+
+  if (!feedExist) {
+    console.log("Feed does not exist in db");
+    return;
+  }
+  // create new feed follow record
+  let result = createFeeedFollow();
+  // look up feeds by url
+
+  // print name of feed and current user if record created
+  let config = readConfig();
+
+  console.log(config.current_user_name);
 
   return;
 }

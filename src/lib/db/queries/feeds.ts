@@ -30,3 +30,19 @@ export async function get_feeds() {
     throw new Error("Unable to fetch feeds: ", error);
   }
 }
+
+export async function getFeedByUrl(url: string) {
+  try {
+    const result = await db.select().from(feeds).where(eq(feeds.url, url));
+    return result;
+  } catch (error: any) {
+    throw new Error("feed does not exist in db");
+  }
+}
+
+export async function createFeeedFollow() {
+  console.log("Creating feed follow record");
+  console.log("TODO: Not implemented");
+
+  return;
+}
