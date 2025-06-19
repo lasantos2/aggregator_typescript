@@ -11,9 +11,11 @@ import {
   createUser,
   deleteUsers,
   showUsers,
-  getUserByName,
+  getUser,
   getUserById,
 } from "./lib/db/queries/user.js";
+
+import { User } from "src/lib/db/schema";
 
 import { fetchFeed } from "./rssfetch.js";
 
@@ -22,13 +24,28 @@ export type CommandHandler = (
   ...args: string[]
 ) => Promise<void>;
 
+export type User = {
+  id: any;
+  name: string;
+};
+
+export type UserCommandHandler = (
+  cmdName: string,
+  user: User,
+  ...args: string[]
+) => Promise<void>;
+
+export type middlewareLoggedIn = (
+  handler: UserCommandHandler,
+) => CommandHandler;
+
 export async function handlerLogin(cmdName: string, ...args: string[]) {
   if (args.length <= 0 || args.length > 1) {
     throw new Error("Expect a single argument: username");
   }
   const name = args[0];
 
-  let userExist = await getUserByName(name);
+  let userExist = await getUser(name);
 
   if (userExist.name !== name) {
     console.log(
@@ -102,7 +119,11 @@ export async function runCommand(
   await registry[cmdName](cmdName, ...args);
 }
 
-export async function addFeed(commandName: string, ...args: string[]) {
+export async function addFeed(
+  commandName: string,
+  user: User,
+  ...args: string[]
+) {
   if (args.length <= 0) {
     console.log("Need two parameters");
   }
@@ -110,19 +131,13 @@ export async function addFeed(commandName: string, ...args: string[]) {
   let namefeed = args[0];
   let urlfeed = args[1];
 
-  let currentConfig = readConfig();
-
-  let current_user = currentConfig.current_user_name;
-
-  let currentUserId = (await getUserByName(current_user)).id;
-
   let feedInfo = await fetchFeed(urlfeed);
   if (feedInfo === undefined) {
     console.log(`Unable to fetch feed from : ${urlfeed}`);
     return;
   }
 
-  let result = await create_feed(namefeed, urlfeed, currentUserId);
+  let result = await create_feed(namefeed, urlfeed, user.id);
 
   if (result === undefined) {
     console.log("Unable to fetch feed");
@@ -131,10 +146,10 @@ export async function addFeed(commandName: string, ...args: string[]) {
 
   console.log("feed created");
 
-  let [results] = await createFeeedFollow(urlfeed, currentUserId);
+  let [results] = await createFeeedFollow(urlfeed, user.id);
 
   console.log(results.feeds.name);
-  console.log(current_user);
+  console.log(user.name);
 }
 
 export async function handlerFeeds() {
@@ -149,7 +164,11 @@ export async function handlerFeeds() {
   return;
 }
 
-export async function handlerFollow(commandName: string, ...args: string[]) {
+export async function handlerFollow(
+  commandName: string,
+  user: User,
+  ...args: string[]
+) {
   console.log("following feed");
 
   let followfeedUrl = args[0];
@@ -161,24 +180,22 @@ export async function handlerFollow(commandName: string, ...args: string[]) {
     console.log("Feed does not exist in db");
     return;
   }
-  let config = readConfig();
-  let userId = await getUserByName(config.current_user_name);
-  let [result] = await createFeeedFollow(followfeedUrl, userId.id);
+  let [result] = await createFeeedFollow(followfeedUrl, user.id);
 
   // print name of feed and current user if record created
   if (result === undefined) return;
 
   console.log(result.feeds.name);
-  console.log(config.current_user_name);
+  console.log(user.name);
 
   return;
 }
 
-export async function handlerFollowing(commandName: string, ...args: string[]) {
-  let config = readConfig();
-
-  let user = await getUserByName(config.current_user_name);
-
+export async function handlerFollowing(
+  commandName: string,
+  user: User,
+  ...args: string[]
+) {
   // get feeds the current user is following
   let feeds = await getFeedFollowsForUser(user.id);
 
