@@ -1,5 +1,5 @@
 import { User } from "../lib/db/schema";
-import { getFeedByUrl } from "../lib/db/queries/feeds";
+import { getFeedByUrl, unfollowFeed } from "../lib/db/queries/feeds";
 import {
   createFeeedFollow,
   getFeedFollowsForUser,
@@ -39,4 +39,16 @@ export async function handlerFollowing(_: string, user: User) {
   for (let feed of feeds) {
     console.log(`${feed.name}`);
   }
+}
+
+export async function handlerDeleteFollow(
+  _: string,
+  user: User,
+  ...args: string[]
+) {
+  let url = args[0];
+
+  let result = await unfollowFeed(user.id, url);
+
+  console.log(`Unfollowed feed`);
 }

@@ -11,7 +11,11 @@ import {
   handlerUsers,
 } from "./command_handler.js";
 import { addFeed, handlerFeeds } from "./commands/feeds.js";
-import { handlerFollowing, handlerFollow } from "./commands/feed-follows.js";
+import {
+  handlerFollowing,
+  handlerFollow,
+  handlerDeleteFollow,
+} from "./commands/feed-follows.js";
 import { middlewareLoggedIn } from "./middleware.js";
 import { handlerAgg } from "./commands/aggregate.js";
 
@@ -50,6 +54,12 @@ async function main() {
     cmndRegis,
     "following",
     middlewareLoggedIn(handlerFollowing),
+  );
+
+  regi = await registerCommand(
+    cmndRegis,
+    "unfollow",
+    middlewareLoggedIn(handlerDeleteFollow),
   );
 
   let commands = argv.slice(2);
