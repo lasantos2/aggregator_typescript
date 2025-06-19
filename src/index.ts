@@ -1,23 +1,21 @@
 import {
-  CommandRegistry,
   CommandHandler,
+  CommandRegistry,
   registerCommand,
   runCommand,
+} from "./commands/commands.js";
+import {
+  handlerReset,
   handlerLogin,
   handlerRegister,
-  handlerReset,
   handlerUsers,
-  handlerAgg,
-  addFeed,
-  handlerFeeds,
-  handlerFollow,
-  handlerFollowing,
 } from "./command_handler.js";
-
+import { addFeed, handlerFeeds } from "./commands/feeds.js";
+import { handlerFollowing, handlerFollow } from "./commands/feed-follows.js";
 import { middlewareLoggedIn } from "./middleware.js";
+import { handlerAgg } from "./commands/aggregate.js";
 
-import argv from "process";
-import process from "process";
+import { argv, process } from "process";
 
 async function main() {
   let cmndRegis: CommandRegistry = {
