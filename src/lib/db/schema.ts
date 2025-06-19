@@ -31,14 +31,12 @@ export const feed_follows = pgTable("feed_follows", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
-  name: text("name").notNull().unique(),
-  url: text("url").notNull().unique(),
+  name: text("name").notNull(),
+  url: text("url").notNull(),
   user_id: uuid("user_id")
     .references(() => users.id, { onDelete: "cascade" })
-    .notNull()
-    .unique(),
+    .notNull(),
   feed_id: uuid("feed_id")
     .references(() => feeds.id, { onDelete: "cascade" })
-    .notNull()
-    .unique(),
+    .notNull(),
 });

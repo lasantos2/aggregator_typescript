@@ -130,6 +130,11 @@ export async function addFeed(commandName: string, ...args: string[]) {
   }
 
   console.log("feed created");
+
+  let [results] = await createFeeedFollow(urlfeed, currentUserId);
+
+  console.log(results.feeds.name);
+  console.log(current_user);
 }
 
 export async function handlerFeeds() {
@@ -156,14 +161,14 @@ export async function handlerFollow(commandName: string, ...args: string[]) {
     console.log("Feed does not exist in db");
     return;
   }
-  console.log("TODO: NOT IMPLEMENTED");
-  // create new feed follow record
-  let result = createFeeedFollow();
-  // look up feeds by url
+  let config = readConfig();
+  let userId = await getUserByName(config.current_user_name);
+  let [result] = await createFeeedFollow(followfeedUrl, userId.id);
 
   // print name of feed and current user if record created
-  let config = readConfig();
+  if (result === undefined) return;
 
+  console.log(result.feeds.name);
   console.log(config.current_user_name);
 
   return;
@@ -173,12 +178,15 @@ export async function handlerFollowing(commandName: string, ...args: string[]) {
   let config = readConfig();
 
   let user = await getUserByName(config.current_user_name);
+
   // get feeds the current user is following
   let feeds = await getFeedFollowsForUser(user.id);
 
-  console.log("TODO: NOT FINISHED IMPLEMENTING");
   if (feeds.length <= 0) {
-    console.log("No feeds received");
     return;
+  }
+
+  for (let feed of feeds) {
+    console.log(`${feed.name}`);
   }
 }
