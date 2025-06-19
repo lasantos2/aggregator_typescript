@@ -24,11 +24,6 @@ export type CommandHandler = (
   ...args: string[]
 ) => Promise<void>;
 
-export type User = {
-  id: any;
-  name: string;
-};
-
 export type UserCommandHandler = (
   cmdName: string,
   user: User,
