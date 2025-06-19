@@ -41,10 +41,15 @@ export async function getFeedByUrl(url: string) {
   }
 }
 
-export async function createFeeedFollow() {
+export async function createFeeedFollow(url: string, user_id: any) {
   console.log("Creating feed follow record");
-  let newFeedFollow = await db.insert(feed_follows);
 
+  let [feed] = await getFeedByUrl(url);
+  let [newFeedFollow] = await db
+    .insert(feed_follows)
+    .values({ name: feed.name, url: url, user_id: user_id, feed_id: feed.id });
+
+  //console.log(newFeedFollow);
   let feedfollowmeta = await db
     .select({
       id: feed_follows.id,
@@ -62,7 +67,7 @@ export async function createFeeedFollow() {
     .from(users);
 
   //const result = await db.select().from(users).innerJoin(pets, eq(users.id, pets.ownerId))
-  let Owo = db
+  let Owo = await db
     .select()
     .from(feed_follows)
     .innerJoin(feeds, eq(feeds.id, feed_follows.feed_id))
