@@ -40,3 +40,7 @@ export const feed_follows = pgTable("feed_follows", {
     .references(() => feeds.id, { onDelete: "cascade" })
     .notNull(),
 });
+
+export type User = typeof users.$inferSelect;
+export type Feed = typeof feeds.$inferSelect;
+export type FeedFollow = typeof feed_follows.$inferSelect;

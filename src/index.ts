@@ -14,6 +14,8 @@ import {
   handlerFollowing,
 } from "./command_handler.js";
 
+import { middlewareLoggedIn } from "./middleware.js";
+
 import argv from "process";
 import process from "process";
 
@@ -34,10 +36,22 @@ async function main() {
   regi = await registerCommand(cmndRegis, "reset", handlerReset);
   regi = await registerCommand(cmndRegis, "users", handlerUsers);
   regi = await registerCommand(cmndRegis, "agg", handlerAgg);
-  regi = await registerCommand(cmndRegis, "addfeed", addFeed);
+  regi = await registerCommand(
+    cmndRegis,
+    "addfeed",
+    middlewareLoggedIn(addFeed),
+  );
   regi = await registerCommand(cmndRegis, "feeds", handlerFeeds);
-  regi = await registerCommand(cmndRegis, "follow", handlerFollow);
-  regi = await registerCommand(cmndRegis, "following", handlerFollowing);
+  regi = await registerCommand(
+    cmndRegis,
+    "follow",
+    middlewareLoggedIn(handlerFollow),
+  );
+  regi = await registerCommand(
+    cmndRegis,
+    "following",
+    middlewareLoggedIn(handlerFollowing),
+  );
 
   let commands = argv["argv"].slice(2);
 

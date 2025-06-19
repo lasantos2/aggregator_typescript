@@ -11,7 +11,7 @@ export async function createUser(name: string) {
   }
 }
 
-export async function getUserByName(name: any) {
+export async function getUser(name: any) {
   const [results] = await db.select().from(users).where(eq(users.name, name));
   return results;
 }
