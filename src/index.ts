@@ -15,7 +15,8 @@ import { handlerFollowing, handlerFollow } from "./commands/feed-follows.js";
 import { middlewareLoggedIn } from "./middleware.js";
 import { handlerAgg } from "./commands/aggregate.js";
 
-import { argv, process } from "process";
+import { argv } from "process";
+import process from "process";
 
 async function main() {
   let cmndRegis: CommandRegistry = {
@@ -51,7 +52,7 @@ async function main() {
     middlewareLoggedIn(handlerFollowing),
   );
 
-  let commands = argv["argv"].slice(2);
+  let commands = argv.slice(2);
 
   if (commands.length <= 0) {
     console.log("Must enter atleast one command");
