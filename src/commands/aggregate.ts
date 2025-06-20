@@ -16,7 +16,13 @@ export async function handlerAgg(_: string, ...args: string[]) {
   let interval = args[0];
   console.log(`Setting interval of : ${interval}`);
 
-  await scrapeFeeds();
+  let convertedInterval = parseDuration(interval);
+
+  scrapeFeeds().catch(handleError);
+
+  const interval = setInterval(() => {
+    scrapeFeeds().catch(handleError);
+  }, convertedInterval);
 }
 
 export async function scrapeFeeds() {
@@ -35,4 +41,11 @@ export async function scrapeFeeds() {
     if (item.title === undefined) continue;
     console.log(item.title);
   }
+}
+
+function parseDuration(durationStr: string): number {
+  const regex = /^(\d+)(ms|s|m|h)$/;
+  const match = durationStr.match(regex);
+
+  return 0;
 }

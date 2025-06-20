@@ -25,6 +25,11 @@ export async function handlerLogin(cmdName: string, ...args: string[]) {
   console.log("User has been set");
 }
 
+export async function handlerError(error: Error) {
+  console.log(error.message);
+  throw error;
+}
+
 export async function handlerReset(cmdName: string, ...args: string[]) {
   let result = await deleteUsers();
 
