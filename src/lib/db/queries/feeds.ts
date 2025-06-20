@@ -1,6 +1,6 @@
-import { eq, and } from "drizzle-orm";
+import { eq, and, asc, sql } from "drizzle-orm";
 import { db } from "..";
-import { feed_follows, feeds } from "../schema";
+import { Feed, feed_follows, feeds } from "../schema";
 import { users } from "../schema";
 
 export async function create_feed(
@@ -38,6 +38,15 @@ export async function getFeedByUrl(url: string) {
     return result;
   } catch (error: any) {
     throw new Error("feed does not exist in db");
+  }
+}
+
+export async function getFeedById(feed_id: any) {
+  try {
+    const feed = await db.select().from(feeds).where(eq(feeds.id, feed_id));
+    return feed;
+  } catch (error: any) {
+    throw new Error("failed to find feed");
   }
 }
 
@@ -89,4 +98,33 @@ export async function unfollowFeed(userid: any, url: string) {
     .delete(feed_follows)
     .where(and(eq(feed_follows.user_id, userid), eq(feed_follows.url, url)));
   return results;
+}
+
+export async function markFeedFetched(feed_id: any) {
+  let feed = getFeedById(feed_id);
+  if (!feed) {
+    throw new Error("feed does not exist to mark as fetched");
+  }
+
+  try {
+    let update = db
+      .update(feeds)
+      .set({
+        updatedAt: new Date(),
+        last_fetched_at: new Date(),
+      })
+      .where(eq(feeds.id, feed_id));
+    return update;
+  } catch (error: any) {
+    throw new Error("Update failed");
+  }
+}
+
+export async function getNextFeedToFetch() {
+  let [feedToFetch] = await db
+    .select()
+    .from(feeds)
+    .orderBy(sql`${feeds.last_fetched_at} desc nulls first`);
+
+  return feedToFetch;
 }
