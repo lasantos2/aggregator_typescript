@@ -113,7 +113,8 @@ export async function markFeedFetched(feed_id: any) {
         updatedAt: new Date(),
         last_fetched_at: new Date(),
       })
-      .where(eq(feeds.id, feed_id));
+      .where(eq(feeds.id, feed_id))
+      .returning();
     return update;
   } catch (error: any) {
     throw new Error("Update failed");
