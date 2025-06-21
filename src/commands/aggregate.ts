@@ -3,13 +3,6 @@ import { fetchFeed } from "../rssfetch";
 import process from "process";
 
 export async function handlerAgg(_: string, ...args: string[]) {
-  //  console.log("Trying to fetch next feed to fetch");
-  // lets test getNextFeedToFetch first
-  //  let nextFeed = await getNextFeedToFetch();
-  //  console.log(nextFeed);
-
-  //  let markfetched = await markFeedFetched(nextFeed.id);
-  //  console.log(markfetched);
   if (args.length <= 0 || args.length > 1) {
     throw new Error("Need only 1 parameter <interval> in ms|min|hr");
   }
