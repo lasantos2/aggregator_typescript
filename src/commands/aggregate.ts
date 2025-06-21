@@ -1,6 +1,6 @@
 import { getNextFeedToFetch, markFeedFetched } from "../lib/db/queries/feeds";
 import { fetchFeed } from "../rssfetch";
-import { User } from "../lib/db/schema";
+import process from "process";
 
 export async function handlerAgg(_: string, ...args: string[]) {
   //  console.log("Trying to fetch next feed to fetch");
@@ -18,11 +18,20 @@ export async function handlerAgg(_: string, ...args: string[]) {
 
   let convertedInterval = parseDuration(interval);
 
-  scrapeFeeds().catch(handleError);
-
-  const interval = setInterval(() => {
-    scrapeFeeds().catch(handleError);
+  const intervalObject = setInterval(async () => {
+    await scrapeFeeds();
+    console.log();
   }, convertedInterval);
+
+  await new Promise<void>((resolve) => {
+    process.on("SIGINT", () => {
+      console.log("Shutting down feed aggregator...");
+      clearInterval(intervalObject);
+      resolve();
+    });
+  });
+
+  for (;;) {}
 }
 
 export async function scrapeFeeds() {
@@ -47,5 +56,23 @@ function parseDuration(durationStr: string): number {
   const regex = /^(\d+)(ms|s|m|h)$/;
   const match = durationStr.match(regex);
 
-  return 0;
+  if (match === undefined) throw new Error("Need the right format");
+  let millisecondstosecond = 1000; //1000ms for 1 second
+  let convertedValue: number = 0;
+  switch (match?.[2]) {
+    case "ms":
+      convertedValue = Number(match?.[1]);
+      break;
+    case "s":
+      convertedValue = Number(match?.[1]) * millisecondstosecond;
+      break;
+    case "m":
+      convertedValue = Number(match?.[1]) * 60 * millisecondstosecond;
+      break;
+    case "h":
+      convertedValue = Number(match?.[1]) * 60 * 60 * millisecondstosecond;
+      break;
+  }
+
+  return convertedValue;
 }
