@@ -52,3 +52,8 @@ export async function handlerDeleteFollow(
 
   console.log(`Unfollowed feed`);
 }
+
+export function printFeedFollow(username: string, feedname: string) {
+  console.log(`* User:         ${username}`);
+  console.log(`* Feed:         ${feedname}`);
+}

@@ -38,16 +38,12 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
 }
 
 export async function handlerUsers(cmdName: string, ...args: string[]) {
-  try {
-    let users = await getUsers();
-    for (let user of users) {
-      if (user.name === readConfig().current_user_name) {
-        console.log(` - ${user.name} (current)`);
-      } else {
-        console.log(` - ${user.name}`);
-      }
+  let users = await getUsers();
+  for (let user of users) {
+    if (user.name === readConfig().current_user_name) {
+      console.log(`* ${user.name} (current)`);
+      continue;
     }
-  } catch (error: any) {
-    throw new Error("No users");
+    console.log(`* ${user.name}`);
   }
 }

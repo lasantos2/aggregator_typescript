@@ -21,12 +21,7 @@ export function readConfig(): Config {
 
   let configjson = JSON.parse(configContent);
 
-  let config: Config = {
-    current_user_name: configjson["current_user_name"],
-    dbUrl: configjson["dbUrl"],
-  };
-
-  return config as Config;
+  return validateConfig(configjson);
 }
 
 function getConfigPath(): string {
@@ -36,9 +31,21 @@ function getConfigPath(): string {
 function writeConfig(cfg: Config): void {
   let fileToWrite = getConfigPath();
 
-  fs.writeFileSync(fileToWrite, JSON.stringify(cfg));
+  fs.writeFileSync(fileToWrite, JSON.stringify(cfg), { encoding: "utf-8" });
 }
 
 function validateConfig(rawConfig: any): Config {
-  return {} as Config;
+  if (!rawConfig.dbUrl || typeof rawConfig.dbUrl !== "string") {
+    throw new Error(`db_url is required in config file`)
+  }
+  if (!rawConfig.current_user_name || typeof rawConfig.current_user_name !== "string") {
+    throw new Error("current_user_name is required in config file");
+  }
+
+  const config: Config = {
+    dbUrl: rawConfig.db_url,
+    current_user_name: rawConfig.current_user_name,
+  };
+
+  return config;
 }
