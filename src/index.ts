@@ -3,13 +3,13 @@ import {
   CommandRegistry,
   registerCommand,
   runCommand,
-} from "./commands/commands.js";
+} from "./commands/commands";
 import {
   handlerReset,
   handlerLogin,
   handlerRegister,
   handlerUsers,
-} from "./command_handler.js";
+} from "./commands/commands";
 import { addFeed, handlerFeeds } from "./commands/feeds.js";
 import {
   handlerFollowing,
@@ -34,29 +34,29 @@ async function main() {
     following: {} as CommandHandler,
   };
 
-  let regi = await registerCommand(cmndRegis, "login", handlerLogin);
-  regi = await registerCommand(cmndRegis, "register", handlerRegister);
-  regi = await registerCommand(cmndRegis, "reset", handlerReset);
-  regi = await registerCommand(cmndRegis, "users", handlerUsers);
-  regi = await registerCommand(cmndRegis, "agg", handlerAgg);
-  regi = await registerCommand(
+  let regi = registerCommand(cmndRegis, "login", handlerLogin);
+  regi = registerCommand(cmndRegis, "register", handlerRegister);
+  regi = registerCommand(cmndRegis, "reset", handlerReset);
+  regi = registerCommand(cmndRegis, "users", handlerUsers);
+  regi = registerCommand(cmndRegis, "agg", handlerAgg);
+  regi = registerCommand(
     cmndRegis,
     "addfeed",
     middlewareLoggedIn(addFeed),
   );
-  regi = await registerCommand(cmndRegis, "feeds", handlerFeeds);
-  regi = await registerCommand(
+  regi = registerCommand(cmndRegis, "feeds", handlerFeeds);
+  regi = registerCommand(
     cmndRegis,
     "follow",
     middlewareLoggedIn(handlerFollow),
   );
-  regi = await registerCommand(
+  regi = registerCommand(
     cmndRegis,
     "following",
     middlewareLoggedIn(handlerFollowing),
   );
 
-  regi = await registerCommand(
+  regi = registerCommand(
     cmndRegis,
     "unfollow",
     middlewareLoggedIn(handlerDeleteFollow),

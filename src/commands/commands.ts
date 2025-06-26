@@ -7,7 +7,7 @@ export type CommandHandler = (
 
 export type CommandRegistry = Record<string, CommandHandler>;
 
-export async function registerCommand(
+export function registerCommand(
   registry: CommandRegistry,
   cmdName: string,
   handler: CommandHandler,
@@ -20,7 +20,12 @@ export async function runCommand(
   cmdName: string,
   ...args: string[]
 ) {
-  await registry[cmdName](cmdName, ...args);
+  const handler = registry[cmdName];
+  if (!handler) {
+    throw new Error(`unknown command: ${cmdName}`);
+  }
+
+  await handler(cmdName, ...args);
 }
 
 export type UserCommandHandler = (
