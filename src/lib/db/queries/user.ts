@@ -26,7 +26,7 @@ export async function deleteUsers() {
   return results;
 }
 
-export async function showUsers() {
+export async function getUsers() {
   const results = await db.select().from(users);
   return results;
 }
