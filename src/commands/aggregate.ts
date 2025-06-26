@@ -1,5 +1,6 @@
 import { getNextFeedToFetch, markFeedFetched } from "../lib/db/queries/feeds";
 import { fetchFeed } from "../rssfetch";
+import { parseDuration } from "../lib/time";
 import process from "process";
 
 export async function handlerAgg(_: string, ...args: string[]) {
@@ -11,9 +12,10 @@ export async function handlerAgg(_: string, ...args: string[]) {
 
   let convertedInterval = parseDuration(interval);
 
-  const intervalObject = setInterval(async () => {
-    await scrapeFeeds();
-    console.log();
+  scrapeFeeds().catch(handleError);
+
+  const intervalObject = setInterval(() => {
+    scrapeFeeds().catch(handleError);
   }, convertedInterval);
 
   await new Promise<void>((resolve) => {
@@ -23,8 +25,6 @@ export async function handlerAgg(_: string, ...args: string[]) {
       resolve();
     });
   });
-
-  for (;;) {}
 }
 
 export async function scrapeFeeds() {
@@ -45,27 +45,7 @@ export async function scrapeFeeds() {
   }
 }
 
-function parseDuration(durationStr: string): number {
-  const regex = /^(\d+)(ms|s|m|h)$/;
-  const match = durationStr.match(regex);
-
-  if (match === undefined) throw new Error("Need the right format");
-  let millisecondstosecond = 1000; //1000ms for 1 second
-  let convertedValue: number = 0;
-  switch (match?.[2]) {
-    case "ms":
-      convertedValue = Number(match?.[1]);
-      break;
-    case "s":
-      convertedValue = Number(match?.[1]) * millisecondstosecond;
-      break;
-    case "m":
-      convertedValue = Number(match?.[1]) * 60 * millisecondstosecond;
-      break;
-    case "h":
-      convertedValue = Number(match?.[1]) * 60 * 60 * millisecondstosecond;
-      break;
-  }
-
-  return convertedValue;
+function handleError(err: unknown) {
+  console.error(`Error scraping feeds: ${err instanceof Error ? err.message : err}`,
+  );
 }
