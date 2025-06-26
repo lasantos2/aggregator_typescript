@@ -50,39 +50,35 @@ export async function getFeedById(feed_id: any) {
   }
 }
 
-export async function createFeeedFollow(url: string, user_id: any) {
+export async function createFeeedFollow(feed_id: string, user_id: string) {
   console.log("Creating feed follow record");
 
-  let [feed] = await getFeedByUrl(url);
-  let [newFeedFollow] = await db
+  const [newFeedFollow] = await db
     .insert(feed_follows)
-    .values({ name: feed.name, url: url, user_id: user_id, feed_id: feed.id });
+    .values({ feed_id, user_id })
+    .returning();
 
-  //console.log(newFeedFollow);
-  let feedfollowmeta = await db
+  const [result] = await db
     .select({
       id: feed_follows.id,
       createdAt: feed_follows.createdAt,
       updatedAt: feed_follows.updatedAt,
+      user_id: feed_follows.user_id,
+      feed_id: feed_follows.feed_id,
+      feed_name: feeds.name,
+      user_name: users.name,
     })
-    .from(feed_follows);
-
-  let feedsmeta = await db
-    .select({ id: feeds.id, name: feeds.name })
-    .from(feeds);
-
-  let usersmeta = await db
-    .select({ id: users.id, name: users.name })
-    .from(users);
-
-  //const result = await db.select().from(users).innerJoin(pets, eq(users.id, pets.ownerId))
-  let Owo = await db
-    .select()
     .from(feed_follows)
-    .innerJoin(feeds, eq(feeds.id, feed_follows.feed_id))
-    .innerJoin(users, eq(users.id, feed_follows.user_id));
+    .innerJoin(feeds, eq(feed_follows.feed_id, feeds.id)),
+    .innerJoin(users, eq(feed_follows.user_id, users.id)),
+    .where(
+      and(
+        eq(feed_follows.id, newFeedFollow.id),
+        eq(users.id, newFeedFollow.user_id),
+      ),
+    );
 
-  return Owo;
+  return feed;
 }
 
 export async function getFeedFollowsForUser(userid: any) {

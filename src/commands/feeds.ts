@@ -2,35 +2,27 @@ import { create_feed, get_feeds } from "../lib/db/queries/feeds";
 import { getUserById } from "../lib/db/queries/user";
 import { Feed, User } from "../lib/db/schema";
 import { createFeeedFollow } from "../lib/db/queries/feeds";
-import { fetchFeed } from "../rssfetch";
+import { printFeedFollow } from "./feed-follows";
 
-export async function addFeed(_: string, user: User, ...args: string[]) {
-  if (args.length <= 0) {
-    console.log("Need two parameters");
+export async function addFeed(cmdName: string, user: User, ...args: string[]) {
+  if (args.length !== 2) {
+    console.log(`usage: ${cmdName} <feed_name> <url>`);
   }
 
   let namefeed = args[0];
   let urlfeed = args[1];
 
-  let feedInfo = await fetchFeed(urlfeed);
-  if (feedInfo === undefined) {
-    console.log(`Unable to fetch feed from : ${urlfeed}`);
-    return;
+  let feed = await create_feed(namefeed, urlfeed, user.id);
+
+  if (!feed) {
+    throw new Error("Failed to create feed");
   }
 
-  let result = await create_feed(namefeed, urlfeed, user.id);
+  let feedFollow = await createFeeedFollow(urlfeed, user.id);
 
-  if (result === undefined) {
-    console.log("Unable to fetch feed");
-    return;
-  }
 
-  console.log("feed created");
-
-  let [results] = await createFeeedFollow(urlfeed, user.id);
-
-  console.log(results.feeds.name);
-  console.log(user.name);
+  printFeedFollow(user.name, feedFollow.name);
+  printFeed(feed, user);
 }
 
 export async function handlerFeeds() {
@@ -38,9 +30,19 @@ export async function handlerFeeds() {
 
   for (let feed of feeds) {
     let user = await getUserById(feed.user_id);
-    console.log(feed.name);
-    console.log(user.name);
+    if (!user) {
+      throw new Error(`Failed to find user for feed ${feed.id}`);
+    }
+    printFeed(feed, user);
+    console.log(`====================================`);
   }
+}
 
-  return;
+function printFeed(feed: Feed, user: User) {
+  console.log(`* ID:            ${feed.id}`);
+  console.log(`* Created:       ${feed.createdAt}`);
+  console.log(`* Updated:       ${feed.updatedAt}`);
+  console.log(`* name:          ${feed.name}`);
+  console.log(`* URL:           ${feed.url}`);
+  console.log(`* User:          ${user.name}`);
 }

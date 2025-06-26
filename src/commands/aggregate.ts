@@ -1,6 +1,7 @@
 import { getNextFeedToFetch, markFeedFetched } from "../lib/db/queries/feeds";
 import { fetchFeed } from "../rssfetch";
 import { parseDuration } from "../lib/time";
+import { Feed } from "../lib/db/schema";
 import process from "process";
 
 export async function handlerAgg(_: string, ...args: string[]) {
@@ -27,7 +28,7 @@ export async function handlerAgg(_: string, ...args: string[]) {
   });
 }
 
-export async function scrapeFeeds() {
+async function scrapeFeeds() {
   //    Get the next feed to fetch from the DB.
   let nextFeed = await getNextFeedToFetch();
   //Mark it as fetched.
@@ -43,6 +44,16 @@ export async function scrapeFeeds() {
     if (item.title === undefined) continue;
     console.log(item.title);
   }
+}
+
+async function scrapeFeed(feed: Feed) {
+  await markFeedFetched(feed.id);
+
+  const feedData = await fetchFeed(feed.url);
+
+  console.log(
+    `Feed ${feed.name} collected, ${feedData.item.length} posts found`,
+  );
 }
 
 function handleError(err: unknown) {
