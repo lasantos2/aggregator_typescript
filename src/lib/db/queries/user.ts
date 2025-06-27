@@ -1,19 +1,16 @@
 import { eq } from "drizzle-orm";
 import { db } from "..";
 import { users } from "../schema";
+import { firstOrUndefined } from "./utils";
 
 export async function createUser(name: string) {
-  try {
-    const [results] = await db.insert(users).values({ name: name }).returning();
-    return results;
-  } catch (error) {
-    throw new Error("Lol");
-  }
+  const [results] = await db.insert(users).values({ name: name }).returning();
+  return results;
 }
 
 export async function getUser(name: any) {
-  const [results] = await db.select().from(users).where(eq(users.name, name));
-  return results;
+  const results = await db.select().from(users).where(eq(users.name, name));
+  return firstOrUndefined(results);
 }
 
 export async function getUserById(userId: any) {
@@ -22,8 +19,7 @@ export async function getUserById(userId: any) {
 }
 
 export async function deleteUsers() {
-  const [results] = await db.delete(users);
-  return results;
+  await db.delete(users);
 }
 
 export async function getUsers() {

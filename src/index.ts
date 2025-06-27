@@ -5,19 +5,19 @@ import {
   runCommand,
 } from "./commands/commands";
 import {
-  handlerReset,
   handlerLogin,
   handlerRegister,
   handlerUsers,
-} from "./commands/commands";
-import { addFeed, handlerFeeds } from "./commands/feeds.js";
+} from "./commands/users";
+import { addFeed, handlerFeeds } from "./commands/feeds";
 import {
   handlerFollowing,
   handlerFollow,
   handlerDeleteFollow,
-} from "./commands/feed-follows.js";
-import { middlewareLoggedIn } from "./middleware.js";
-import { handlerAgg } from "./commands/aggregate.js";
+} from "./commands/feed-follows";
+import { middlewareLoggedIn } from "./middleware";
+import { handlerAgg } from "./commands/aggregate";
+import { handlerReset } from "./commands/reset";
 
 import { argv } from "process";
 import process from "process";

@@ -8,19 +8,15 @@ export type Config = {
 };
 
 export function setUser(username: string) {
-  // writes config object to json file after stting current user name field
-  let oldconfig = readConfig();
-  let config: Config = { current_user_name: username, dbUrl: oldconfig.dbUrl };
-
+  const config = readConfig();
+  config.current_user_name = username;
   writeConfig(config);
 }
 
-export function readConfig(): Config {
+export function readConfig() {
   let file = getConfigPath();
-  let configContent = fs.readFileSync(file, { encoding: "utf-8" });
-
+  let configContent = fs.readFileSync(file, "utf-8");
   let configjson = JSON.parse(configContent);
-
   return validateConfig(configjson);
 }
 
@@ -31,11 +27,17 @@ function getConfigPath(): string {
 function writeConfig(cfg: Config): void {
   let fileToWrite = getConfigPath();
 
-  fs.writeFileSync(fileToWrite, JSON.stringify(cfg), { encoding: "utf-8" });
+  const rawConfig = {
+    db_url: cfg.dbUrl,
+    current_user_name: cfg.current_user_name,
+  };
+
+  const data = JSON.stringify(rawConfig, null, 2);
+  fs.writeFileSync(fileToWrite, data, { encoding: "utf-8" });
 }
 
-function validateConfig(rawConfig: any): Config {
-  if (!rawConfig.dbUrl || typeof rawConfig.dbUrl !== "string") {
+function validateConfig(rawConfig: any) {
+  if (!rawConfig.db_url || typeof rawConfig.db_url !== "string") {
     throw new Error(`db_url is required in config file`)
   }
   if (!rawConfig.current_user_name || typeof rawConfig.current_user_name !== "string") {

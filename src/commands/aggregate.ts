@@ -1,6 +1,6 @@
 import { getNextFeedToFetch, markFeedFetched } from "../lib/db/queries/feeds";
-import { fetchFeed } from "../rssfetch";
 import { parseDuration } from "../lib/time";
+import { fetchFeed } from "../lib/rss";
 import { Feed } from "../lib/db/schema";
 import process from "process";
 
@@ -32,18 +32,13 @@ async function scrapeFeeds() {
   //    Get the next feed to fetch from the DB.
   let nextFeed = await getNextFeedToFetch();
   //Mark it as fetched.
-  let markedFeed = await markFeedFetched(nextFeed.id);
-  if (markedFeed === undefined) {
-    throw new Error("No feed to mark");
-  }
-  //Fetch the feed using the URL (we already wrote this function)
-  //Iterate over the items in the feed and print their titles to the console.
-  let fetchedFeed = await fetchFeed(nextFeed.url);
 
-  for (let item of fetchedFeed.item) {
-    if (item.title === undefined) continue;
-    console.log(item.title);
+  if (!nextFeed) {
+    console.log(`No feeds to fetch.`);
+    return;
   }
+  console.log(`Found a feed to fetch!`);
+  scrapeFeed(nextFeed);
 }
 
 async function scrapeFeed(feed: Feed) {
@@ -52,7 +47,7 @@ async function scrapeFeed(feed: Feed) {
   const feedData = await fetchFeed(feed.url);
 
   console.log(
-    `Feed ${feed.name} collected, ${feedData.item.length} posts found`,
+    `Feed ${feed.name} collected, ${feedData.channel.item.length} posts found`,
   );
 }
 

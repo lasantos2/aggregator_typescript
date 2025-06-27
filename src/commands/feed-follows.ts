@@ -1,9 +1,6 @@
 import { User } from "../lib/db/schema";
-import { getFeedByUrl, unfollowFeed } from "../lib/db/queries/feeds";
-import {
-  createFeeedFollow,
-  getFeedFollowsForUser,
-} from "../lib/db/queries/feeds";
+import { getFeedById, getFeedByUrl } from "../lib/db/queries/feeds";
+import { createFeedFollow, deleteFeedFollow, getFeedFollowsForUser } from "../lib/db/queries/feed-follows";
 
 export async function handlerFollow(_: string, user: User, ...args: string[]) {
   console.log("following feed");
@@ -17,15 +14,13 @@ export async function handlerFollow(_: string, user: User, ...args: string[]) {
     console.log("Feed does not exist in db");
     return;
   }
-  let [result] = await createFeeedFollow(followfeedUrl, user.id);
+  let result = await createFeedFollow(followfeedUrl, user.id);
 
   // print name of feed and current user if record created
   if (result === undefined) return;
 
-  console.log(result.feeds.name);
-  console.log(user.name);
+  printFeedFollow(result.userName, result.feedName);
 
-  return;
 }
 
 export async function handlerFollowing(_: string, user: User) {
@@ -37,7 +32,8 @@ export async function handlerFollowing(_: string, user: User) {
   }
 
   for (let feed of feeds) {
-    console.log(`${feed.name}`);
+    const feedrecord = await getFeedById(feed.feedId);
+    console.log(`${feedrecord?.name}`);
   }
 }
 
@@ -48,7 +44,7 @@ export async function handlerDeleteFollow(
 ) {
   let url = args[0];
 
-  let result = await unfollowFeed(user.id, url);
+  let result = await deleteFeedFollow(user.id, url);
 
   console.log(`Unfollowed feed`);
 }
