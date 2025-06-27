@@ -13,7 +13,7 @@ export async function create_feed(
     .insert(feeds)
     .values({
       name: feedname,
-      feedurl,
+      url: feedurl,
       userId,
     })
     .returning();

@@ -2,9 +2,10 @@ import { getNextFeedToFetch, markFeedFetched } from "../lib/db/queries/feeds";
 import { parseDuration } from "../lib/time";
 import { fetchFeed } from "../lib/rss";
 import { Feed } from "../lib/db/schema";
-import process from "process";
 
 export async function handlerAgg(_: string, ...args: string[]) {
+
+  console.log("LOL");
   if (args.length <= 0 || args.length > 1) {
     throw new Error("Need only 1 parameter <interval> in ms|min|hr");
   }
@@ -26,6 +27,7 @@ export async function handlerAgg(_: string, ...args: string[]) {
       resolve();
     });
   });
+
 }
 
 async function scrapeFeeds() {

@@ -19,9 +19,6 @@ import { middlewareLoggedIn } from "./middleware";
 import { handlerAgg } from "./commands/aggregate";
 import { handlerReset } from "./commands/reset";
 
-import { argv } from "process";
-import process from "process";
-
 async function main() {
   let cmndRegis: CommandRegistry = {
     login: {} as CommandHandler,
@@ -62,7 +59,7 @@ async function main() {
     middlewareLoggedIn(handlerDeleteFollow),
   );
 
-  let commands = argv.slice(2);
+  let commands = process.argv.slice(2);
 
   if (commands.length <= 0) {
     console.log("Must enter atleast one command");

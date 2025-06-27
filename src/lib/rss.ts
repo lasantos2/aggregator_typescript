@@ -34,6 +34,8 @@ export async function fetchFeed(feedUrl: string) {
 
   let rssfeed = parser.parse(await resp.text());
 
+  const channel = rssfeed.rss?.channel;
+
   if (rssfeed.rss.channel === undefined) {
     throw new Error("rss.channel does not exist");
   }
@@ -50,41 +52,33 @@ export async function fetchFeed(feedUrl: string) {
     throw new Error("rss.channel.description does not exist");
   }
 
-  let title: string = rssfeed.rss.channel.title;
-  let link: string = rssfeed.rss.channel.link;
-  let description: string = rssfeed.rss.channel.description;
-  let items: Object[];
+  const items: any[] = Array.isArray(channel.item)
+    ? channel.item : [channel.item];
 
-  if (Array.isArray(rssfeed.rss.channel.item)) {
-    items = [];
-    for (let item of rssfeed.rss.channel.item) {
-      let title = item.title;
-      let link = item.link;
-      let desc = item.description;
-      let pubdate = item.pubDate;
 
-      if (
-        title === undefined ||
-        link === undefined ||
-        desc === undefined ||
-        pubdate === undefined
-      ) {
-        continue;
-      } else {
-        items.push({ title, link, desc, pubdate });
-      }
+  const rssItems: RSSItem[] = [];
+
+  for (const item of items) {
+    if (!item.title || !item.link || !item.description || !item.pubDate) {
+      continue;
     }
-  } else {
-    items = [];
+
+    rssItems.push({
+      title: item.title,
+      link: item.link,
+      description: item.description,
+      pubDate: item.pubDate,
+    });
   }
 
-  let rsfeedobj: RSSFeed;
-      title: title,
-      link: link,
-      description: description,
-      item: items,
-    }
+  const rss: RSSFeed = {
+    channel: {
+      title: channel.title,
+      link: channel.link,
+      description: channel.description,
+      item: rssItems,
+    },
   };
 
-  return rsfeedobj;
+  return rss;
 }
