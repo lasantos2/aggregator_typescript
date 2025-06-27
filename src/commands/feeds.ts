@@ -1,8 +1,8 @@
 import { create_feed, get_feeds } from "../lib/db/queries/feeds";
 import { getUserById } from "../lib/db/queries/user";
 import { Feed, User } from "../lib/db/schema";
-import { createFeeedFollow } from "../lib/db/queries/feeds";
 import { printFeedFollow } from "./feed-follows";
+import { createFeedFollow } from "../lib/db/queries/feed-follows";
 
 export async function addFeed(cmdName: string, user: User, ...args: string[]) {
   if (args.length !== 2) {
@@ -18,10 +18,10 @@ export async function addFeed(cmdName: string, user: User, ...args: string[]) {
     throw new Error("Failed to create feed");
   }
 
-  let feedFollow = await createFeeedFollow(urlfeed, user.id);
+  let feedFollow = await createFeedFollow(urlfeed, user.id);
 
 
-  printFeedFollow(user.name, feedFollow.name);
+  printFeedFollow(user.name, feedFollow.feedName);
   printFeed(feed, user);
 }
 
@@ -29,7 +29,7 @@ export async function handlerFeeds() {
   let feeds = await get_feeds();
 
   for (let feed of feeds) {
-    let user = await getUserById(feed.user_id);
+    let user = await getUserById(feed.userId);
     if (!user) {
       throw new Error(`Failed to find user for feed ${feed.id}`);
     }

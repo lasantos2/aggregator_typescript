@@ -9,14 +9,12 @@ export async function handlerLogin(cmdName: string, ...args: string[]) {
 
   let userExist = await getUser(name);
 
-  if (userExist.name !== name) {
-    console.log(
-      `User: ${name} does not exist in database, register user first`,
-    );
+  if (!userExist) {
+    throw new Error(`User ${name} does not exist`);
   }
+
   setUser(userExist.name);
 
-  console.log("User has been set");
 }
 
 export async function handlerRegister(cmdName: string, ...args: string[]) {
@@ -25,13 +23,9 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
   }
 
   let name = args[0];
-  let status: any;
-  console.log(`trying to register ${name}`);
-
-  try {
-    status = await createUser(name);
-  } catch (error: any) {
-    throw new Error("User already exists");
+  const status = await createUser(name);
+  if (!status) {
+    throw new Error(`User ${name} not found`);
   }
   setUser(status.name);
   console.log("created User");
