@@ -64,3 +64,4 @@ export const posts = pgTable("posts", {
   feed_id: uuid("feed_id").notNull(),
 });
 
+export type Post = typeof posts.$inferSelect;
